@@ -111,7 +111,7 @@ const Experience = () => {
                   </p>
                 </div>
               </div>
-              <ul className="list-disc my-4 ml-[25px]">
+              <ul className="list-disc my-4 ml-[25px] leading-7">
                 {company.bullets.map((bullet: string, index: number) => {
                   return <li key={index}>{bullet}</li>;
                 })}
