@@ -5,7 +5,7 @@ import Experience from "@/components/Experience";
 export default function Home() {
   
   return (
-    <div>
+    <div className="font-poppins">
       <Header />
       <Experience />
     </div>
