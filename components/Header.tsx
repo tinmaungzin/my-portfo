@@ -63,13 +63,13 @@ const Header = () => {
       </div>
       <div className="flex justify-center">
         <Link href="/documents/Tin Maung Zin - Resume.pdf" target="_blank">
-          <p className="text-white bg-orange-400 p-2 text-center my-5 w-[15em] hover:bg-orange-800">
+          <p className="text-white bg-orange-400 p-2 text-center my-10 w-[15em] hover:bg-orange-800 rounded-full">
             View Resume
           </p>
         </Link>
       </div>
 
-      <div className=" flex justify-center gap-10 py-10">
+      <div className=" flex justify-center gap-10 pt-5 pb-10">
         <Link href="https://github.com/tinmaungzin" target="_blank" title="Github Profile">
           <FaGithub className="text-4xl text-orange-500" />
         </Link>
