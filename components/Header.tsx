@@ -61,7 +61,7 @@ const Header = () => {
         })}
       </div>
       <div className="flex justify-center">
-        <Link href="test.com" target="_blank">
+        <Link href="/documents/Tin Maung Zin - Resume.pdf" target="_blank">
           <p className="text-white bg-orange-400 p-2 text-center my-5 w-[15em] hover:bg-orange-800">
             View Resume
           </p>
@@ -69,13 +69,13 @@ const Header = () => {
       </div>
 
       <div className=" flex justify-center gap-10 py-10">
-        <Link href="test.com" target="_blank" title="Github Profile">
+        <Link href="https://github.com/tinmaungzin" target="_blank" title="Github Profile">
           <FaGithub className="text-4xl text-orange-500" />
         </Link>
-        <Link href="test.com" target="_blank" title="LinkedIn Profile">
+        <Link href="https://www.linkedin.com/in/tinmaungzin/" target="_blank" title="LinkedIn Profile">
           <FaLinkedin className="text-4xl text-orange-500" />
         </Link>
-        <Link href="test.com" target="_blank" title="Reach by mail">
+        <Link href="mailto:tinmaungzin.tmz@gmail.com" target="_blank" title="Reach by mail">
           <IoMailOpenSharp className="text-4xl text-orange-500" />
         </Link>
       </div>

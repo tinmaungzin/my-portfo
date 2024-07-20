@@ -5,7 +5,6 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <title>Tin Maung Zin</title>
         <meta property="og:title" content="Tin Maung Zin" key="title" />
       </Head>
       <body>
