@@ -8,15 +8,15 @@ const Footer = () => {
           <p className="text-center text-lg text-orange-500">Contact</p>
           <ul className="list-disc ml-[25px] py-5">
             <li className="underline py-1">
-              <Link href="tel:+66931588496">+66931588496</Link>
+              <Link href="tel:+66931588496" target="_blank">+66931588496</Link>
             </li>
             <li className="underline py-1">
-              <Link href="mailto:tinmaungzin.tmz@gmail.com">
+              <Link href="mailto:tinmaungzin.tmz@gmail.com" target="_blank">
                 tinmaungzin.tmz@gmail.com
               </Link>
             </li>
             <li className="underline py-1">
-              <Link href="https://www.linkedin.com/in/tinmaungzin/">
+              <Link href="https://www.linkedin.com/in/tinmaungzin/" target="_blank">
                 LinkedIn Profile
               </Link>
             </li>
@@ -26,15 +26,15 @@ const Footer = () => {
           <p className="text-center text-lg text-orange-500">Links</p>
           <ul className="list-disc ml-[25px] py-5">
             <li className="underline py-1">
-              <Link href="https://github.com/tinmaungzin">Github Profile</Link>
+              <Link href="https://github.com/tinmaungzin" target="_blank">Github Profile</Link>
             </li>
             <li className="underline py-1">
-              <Link href="https://www.linkedin.com/in/tinmaungzin/">
+              <Link href="https://www.linkedin.com/in/tinmaungzin/" target="_blank">
                 LinkedIn Profile
               </Link>
             </li>
             <li className="underline py-1">
-              <Link href="/documents/Tin Maung Zin - Resume.pdf">
+              <Link href="/documents/Tin Maung Zin - Resume.pdf" target="_blank">
                 My Resume
               </Link>
             </li>
