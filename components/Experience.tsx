@@ -83,7 +83,7 @@ const Experience = () => {
     },
   ];
   return (
-    <div className="bg-gray-300 px-[10%] md:px-[15%] lg:px-[20%] xl:px-[30%]">
+    <div className="bg-gray-300 px-[10%] md:px-[15%] lg:px-[20%] xl:px-[30%] text-black">
       <p className="text-center py-10 text-2xl font-bold">Experiences</p>
 
       <div className="py-8">

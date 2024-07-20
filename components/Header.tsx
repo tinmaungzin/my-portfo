@@ -21,7 +21,7 @@ const Header = () => {
     "Git",
   ];
   return (
-    <div className=" bg-gray-900 px-[10%] md:px-[15%] lg:px-[20%] xl:px-[30%]">
+    <div className=" bg-gray-900 px-[10%] md:px-[15%] lg:px-[20%] xl:px-[30%] text-white">
       <div className="flex justify-center pt-12 ">
         <div className="w-[200px] h-[200px] relative ">
           <Image
