@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { CiLocationOn } from "react-icons/ci";
 
 const Experience = () => {
   const companies = [
@@ -103,10 +104,13 @@ const Experience = () => {
                 </div>
 
                 <div>
-                  <p className="py-1 text-center lg:text-left">
+                  <p className="py-1 text-center lg:text-right">
                     {company.role}
                   </p>
-                  <p className="py-1 text-center lg:text-left">
+                  <p className="py-1 text-center lg:text-right">
+                    {company.location}
+                  </p>
+                  <p className="py-1 text-center lg:text-right">
                     {company.duration}
                   </p>
                 </div>
