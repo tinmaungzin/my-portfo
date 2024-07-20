@@ -43,7 +43,7 @@ const Projects = () => {
                 <p className="py-2 text-lg text-orange-500">{project.name}</p>
                 <Link href={project.link} target="_blank">
                   {" "}
-                  <p className=" py-2 underline ">
+                  <p className=" py-2 underline text-sm">
                     Source Code
                   </p>{" "}
                 </Link>
