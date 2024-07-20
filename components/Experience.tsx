@@ -99,12 +99,12 @@ const Experience = () => {
                     width={100}
                     height={100}
                   />
-                  <p className="py-4 text-center font-bold text-orange-500">
+                  <p className="py-4 text-center font-bold text-orange-500 text-lg">
                     {company.name}
                   </p>
                 </div>
 
-                <div>
+                <div className="text-sm">
                   <p className="py-1 text-center lg:text-right">
                     {company.role}
                   </p>
