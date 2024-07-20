@@ -10,6 +10,7 @@ const Header = () => {
     "Laravel",
     "VueJS",
     "NextJS",
+    "NestJS",
     "MySQL",
     "Postgres",
     "MongoDB",
