@@ -121,7 +121,7 @@ const Experience = () => {
                   return <li key={index}>{bullet}</li>;
                 })}
               </ul>
-              <div className=" flex flex-wrap">
+              <div className=" flex flex-wrap justify-center items-center">
                 {company.technologies.map((skill: any, index: number) => {
                   return (
                     <span

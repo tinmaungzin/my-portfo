@@ -50,7 +50,7 @@ const Projects = () => {
               </div>
 
               <p className="py-4 leading-7">{project.description}</p>
-              <div className=" flex flex-wrap">
+              <div className=" flex flex-wrap justify-center items-center">
                 {project.technologies.map((skill: any, index: number) => {
                   return (
                     <span

@@ -49,7 +49,7 @@ const Header = () => {
           several technologies and services.
         </p>
       </div>
-      <div className=" flex flex-wrap">
+      <div className=" flex flex-wrap justify-center items-center">
         {skills.map((skill: any, index: number) => {
           return (
             <span
