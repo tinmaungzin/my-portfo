@@ -4,8 +4,8 @@ const Education = () => {
       <p className="text-center py-10 text-2xl font-bold">Other infos</p>
       <div className="pb-10">
         <p className="text-justify leading-7">
-          I am a Burmese (Myanmar) citizen currently residing in Bangkok,
-          Thailand. In addition to being fluent in English, I have a strong
+          I am a Burmese (Myanmar 🇲🇲) citizen currently residing in Bangkok,
+          Thailand 🇹🇭. In addition to being fluent in English 🇬🇧, I have a strong
           educational background, having graduated with a Bachelor of
           Engineering in Computer Science from Mandalay Technological University
           in Mandalay, Myanmar. My experience and education have equipped me
