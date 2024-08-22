@@ -10,7 +10,7 @@ const Experience = () => {
       role: "Software Engineer",
       duration: "Mar 2022 – June 2024 (2 Years and 3 Months)",
       bullets: [
-        "Developed and maintained multiple full-stack apps using Laravel, Node.js and Next.js, including restaurant booking, gym POS, e-commerce, and insurance management.",
+        "Developed and maintained multiple full-stack apps using Laravel, Golang, Node.js and Next.js, including restaurant booking, gym POS, e-commerce, and insurance management.",
       ],
       technologies: [
         "ReactJS",
@@ -18,6 +18,7 @@ const Experience = () => {
         "NodeJS",
         "NestJS",
         "Laravel",
+        "Golang",
         "MySQL",
         "RabbitMQ",
         "Terraform",
