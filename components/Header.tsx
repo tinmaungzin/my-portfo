@@ -9,6 +9,7 @@ const Header = () => {
     "NodeJS",
     "Laravel",
     "Golang",
+    "Python",
     "VueJS",
     "NextJS",
     "NestJS",
@@ -76,7 +77,7 @@ const Header = () => {
         </Link>
       </div>
       <div className="flex justify-center">
-        <Link href="/documents/Tin Maung Zin Resume 22 Aug 2024.pdf" target="_blank">
+        <Link href="/documents/Tin Maung Zin - Resume.pdf" target="_blank">
           <p className="text-white bg-orange-400 p-2 text-center my-10 w-[15em] hover:bg-orange-800 rounded-full">
             View Resume
           </p>

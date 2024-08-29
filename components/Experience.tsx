@@ -19,6 +19,7 @@ const Experience = () => {
         "NestJS",
         "Laravel",
         "Golang",
+        "Python",
         "MySQL",
         "RabbitMQ",
         "Terraform",

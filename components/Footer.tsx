@@ -34,7 +34,7 @@ const Footer = () => {
               </Link>
             </li>
             <li className="underline py-1">
-              <Link href="/documents/Tin Maung Zin Resume 22 Aug 2024.pdf" target="_blank">
+              <Link href="/documents/Tin Maung Zin - Resume.pdf" target="_blank">
                 My Resume
               </Link>
             </li>
