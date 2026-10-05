@@ -1,188 +1,178 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { navLinks } from "@/lib/data";
-import { FaGithub, FaLinkedin, FaLine } from "react-icons/fa6";
 import ThemeToggle from "../ThemeToggle";
+import SocialLinks from "../ui/SocialLinks";
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState("");
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
+        const onScroll = () => setIsScrolled(window.scrollY > 24);
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
 
-            // Determine active section
-            const sections = navLinks.map(link => link.href.slice(1));
-            for (const section of sections.reverse()) {
-                const element = document.getElementById(section);
-                if (element) {
-                    const rect = element.getBoundingClientRect();
-                    if (rect.top <= 150) {
-                        setActiveSection(section);
-                        break;
-                    }
-                }
-            }
+        // Highlight the section that crosses the upper third of the viewport
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) setActiveSection(entry.target.id);
+                });
+            },
+            { rootMargin: "-30% 0px -65% 0px" }
+        );
+        navLinks.forEach((link) => {
+            const el = document.getElementById(link.href.slice(1));
+            if (el) observer.observe(el);
+        });
+
+        return () => {
+            window.removeEventListener("scroll", onScroll);
+            observer.disconnect();
         };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const scrollToSection = (href: string) => {
-        const element = document.querySelector(href);
-        if (element) {
-            element.scrollIntoView({ behavior: "smooth" });
-        }
-        setIsMobileMenuOpen(false);
-    };
+    useEffect(() => {
+        if (!isMenuOpen) return;
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && setIsMenuOpen(false);
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [isMenuOpen]);
+
+    const solid = isScrolled || isMenuOpen;
 
     return (
         <>
-            <motion.nav
-                initial={{ y: -100 }}
-                animate={{ y: 0 }}
-                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                    ? "glass-card border-b border-glass-border py-3"
-                    : "py-5 bg-transparent"
-                    }`}
+            <a
+                href="#main"
+                className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-surface focus:text-text-primary focus:shadow-lg"
             >
-                <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-                    {/* Logo / Terminal Prompt */}
-                    <Link href="/" className="font-mono text-sm md:text-base">
+                Skip to content
+            </a>
+
+            <header
+                className={`fixed top-0 inset-x-0 z-50 transition-[background-color,border-color,padding] duration-300 border-b ${
+                    solid ? "nav-blur border-glass-border py-2.5" : "border-transparent py-4"
+                }`}
+                // An open menu covers page content, so make it fully opaque for legibility
+                style={isMenuOpen ? { background: "var(--bg-primary)" } : undefined}
+            >
+                <nav className="max-w-content mx-auto px-5 sm:px-6 flex items-center justify-between gap-4" aria-label="Main">
+                    <a href="#top" className="font-mono text-sm md:text-[15px] shrink-0" aria-label="Tin Maung Zin, back to top">
                         <span className="text-accent-cyan">tmz</span>
                         <span className="text-text-muted">@</span>
                         <span className="text-accent-purple">portfolio</span>
-                        <span className="text-text-muted">:~$ </span>
-                        <span className="animate-pulse text-accent-cyan">▋</span>
-                    </Link>
+                        <span className="text-text-muted">:~$</span>
+                        <span className="cursor-blink text-accent-cyan ml-1" aria-hidden>
+                            ▋
+                        </span>
+                    </a>
 
-                    {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center gap-8">
-                        {navLinks.map((link) => (
-                            <button
-                                key={link.name}
-                                onClick={() => scrollToSection(link.href)}
-                                className={`relative text-sm transition-colors duration-200 ${activeSection === link.href.slice(1)
-                                    ? "text-accent-cyan"
-                                    : "text-text-secondary hover:text-text-primary"
-                                    }`}
-                            >
-                                {link.name}
-                                {activeSection === link.href.slice(1) && (
-                                    <motion.div
-                                        layoutId="activeSection"
-                                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-accent-cyan rounded-full"
-                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                                    />
-                                )}
-                            </button>
-                        ))}
-                    </div>
+                    <ul className="hidden md:flex items-center gap-1">
+                        {navLinks.map((link) => {
+                            const active = activeSection === link.href.slice(1);
+                            return (
+                                <li key={link.name}>
+                                    <a
+                                        href={link.href}
+                                        aria-current={active ? "true" : undefined}
+                                        className={`relative block px-3 py-2 text-sm rounded-lg transition-colors ${
+                                            active ? "text-text-primary" : "text-text-secondary hover:text-text-primary"
+                                        }`}
+                                    >
+                                        {active && (
+                                            <motion.span
+                                                layoutId="nav-pill"
+                                                className="absolute inset-0 rounded-lg bg-glass-bg border border-glass-border"
+                                                transition={{ type: "spring", stiffness: 400, damping: 34 }}
+                                            />
+                                        )}
+                                        <span className="relative">{link.name}</span>
+                                    </a>
+                                </li>
+                            );
+                        })}
+                    </ul>
 
-                    {/* Social Links & Theme Toggle */}
-                    <div className="hidden md:flex items-center gap-4">
-                        <Link
-                            href="https://github.com/tinmaungzin"
-                            target="_blank"
-                            className="text-[var(--text-secondary)] hover:text-accent-cyan transition-colors"
-                        >
-                            <FaGithub size={20} />
-                        </Link>
-                        <Link
-                            href="https://www.linkedin.com/in/tinmaungzin/"
-                            target="_blank"
-                            className="text-[var(--text-secondary)] hover:text-accent-blue transition-colors"
-                        >
-                            <FaLinkedin size={20} />
-                        </Link>
-                        <Link
-                            href="https://line.me/ti/p/m7okkh6R6_"
-                            target="_blank"
-                            className="text-[var(--text-secondary)] hover:text-accent-green transition-colors"
-                        >
-                            <FaLine size={20} />
-                        </Link>
+                    <div className="hidden md:flex items-center gap-2">
+                        <SocialLinks className="hidden lg:flex" />
+                        <span className="hidden lg:block w-px h-6 bg-glass-border mx-1" aria-hidden />
                         <ThemeToggle />
                     </div>
 
-                    {/* Mobile Menu Button */}
-                    <button
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="md:hidden flex flex-col gap-1.5 p-2"
-                    >
-                        <motion.span
-                            animate={isMobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-                            className="w-5 h-0.5 bg-text-primary rounded"
-                        />
-                        <motion.span
-                            animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
-                            className="w-5 h-0.5 bg-text-primary rounded"
-                        />
-                        <motion.span
-                            animate={isMobileMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-                            className="w-5 h-0.5 bg-text-primary rounded"
-                        />
-                    </button>
-                </div>
-            </motion.nav>
+                    <div className="flex md:hidden items-center gap-2">
+                        <ThemeToggle />
+                        <button
+                            type="button"
+                            onClick={() => setIsMenuOpen((open) => !open)}
+                            className="icon-btn"
+                            aria-expanded={isMenuOpen}
+                            aria-controls="mobile-menu"
+                            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                        >
+                            <span className="relative block w-[18px] h-3" aria-hidden>
+                                <span
+                                    className={`absolute left-0 w-full h-0.5 rounded bg-current transition-transform duration-300 ${
+                                        isMenuOpen ? "top-[5px] rotate-45" : "top-0"
+                                    }`}
+                                />
+                                <span
+                                    className={`absolute left-0 top-[5px] w-full h-0.5 rounded bg-current transition-opacity duration-200 ${
+                                        isMenuOpen ? "opacity-0" : "opacity-100"
+                                    }`}
+                                />
+                                <span
+                                    className={`absolute left-0 w-full h-0.5 rounded bg-current transition-transform duration-300 ${
+                                        isMenuOpen ? "top-[5px] -rotate-45" : "top-[10px]"
+                                    }`}
+                                />
+                            </span>
+                        </button>
+                    </div>
+                </nav>
 
-            {/* Mobile Menu */}
-            <AnimatePresence>
-                {isMobileMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        className="fixed top-16 left-0 right-0 z-40 glass-card border-b border-glass-border md:hidden"
-                    >
-                        <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-4">
-                            {navLinks.map((link) => (
-                                <button
-                                    key={link.name}
-                                    onClick={() => scrollToSection(link.href)}
-                                    className={`text-left text-sm py-2 transition-colors ${activeSection === link.href.slice(1)
-                                        ? "text-accent-cyan"
-                                        : "text-text-secondary"
-                                        }`}
-                                >
-                                    <span className="text-accent-purple mr-2">{">"}</span>
-                                    {link.name}
-                                </button>
-                            ))}
-                            <div className="flex items-center gap-4 pt-2 border-t border-[var(--glass-border)]">
-                                <Link
-                                    href="https://github.com/tinmaungzin"
-                                    target="_blank"
-                                    className="text-[var(--text-secondary)] hover:text-accent-cyan transition-colors"
-                                >
-                                    <FaGithub size={20} />
-                                </Link>
-                                <Link
-                                    href="https://www.linkedin.com/in/tinmaungzin/"
-                                    target="_blank"
-                                    className="text-[var(--text-secondary)] hover:text-accent-blue transition-colors"
-                                >
-                                    <FaLinkedin size={20} />
-                                </Link>
-                                <Link
-                                    href="https://line.me/ti/p/m7okkh6R6_"
-                                    target="_blank"
-                                    className="text-[var(--text-secondary)] hover:text-accent-green transition-colors"
-                                >
-                                    <FaLine size={20} />
-                                </Link>
-                                <ThemeToggle />
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                <AnimatePresence>
+                    {isMenuOpen && (
+                        <motion.div
+                            id="mobile-menu"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                            className="md:hidden overflow-hidden"
+                        >
+                            <ul className="max-w-content mx-auto px-5 pt-3 pb-5 flex flex-col">
+                                {navLinks.map((link) => {
+                                    const active = activeSection === link.href.slice(1);
+                                    return (
+                                        <li key={link.name}>
+                                            <a
+                                                href={link.href}
+                                                onClick={() => setIsMenuOpen(false)}
+                                                className={`flex items-center gap-3 py-3 text-base border-b border-glass-border ${
+                                                    active ? "text-accent-cyan" : "text-text-secondary"
+                                                }`}
+                                            >
+                                                <span className="font-mono text-accent-purple text-sm" aria-hidden>
+                                                    {">"}
+                                                </span>
+                                                {link.name}
+                                            </a>
+                                        </li>
+                                    );
+                                })}
+                                <li className="pt-4">
+                                    <SocialLinks />
+                                </li>
+                            </ul>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </header>
         </>
     );
 };

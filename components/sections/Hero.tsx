@@ -1,270 +1,192 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { CSSProperties } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaLine } from "react-icons/fa6";
-import { IoMailOpenSharp, IoDocumentText } from "react-icons/io5";
-import { personalInfo, skills } from "@/lib/data";
+import { IoDocumentText } from "react-icons/io5";
+import { FiArrowRight } from "react-icons/fi";
+import { personalInfo, experiences } from "@/lib/data";
+import SocialLinks from "../ui/SocialLinks";
 
 const commands = [
     { command: "whoami", output: personalInfo.name },
-    { command: "cat role.txt", output: personalInfo.role },
-    { command: "echo $EXPERIENCE", output: `${personalInfo.yearsExperience}+ years of experience` },
-    { command: "head -3 skills.txt", output: skills.slice(0, 5).map(s => s.name).join(", ") + "..." },
+    { command: "cat focus.txt", output: "web platforms · data & automation · conflict research" },
+    { command: "echo $EXPERIENCE", output: `${personalInfo.yearsExperience}+ years, ${experiences.length} companies` },
+    { command: "cat status", output: `${personalInfo.availability.toLowerCase()} ✓`, highlight: true },
 ];
 
+// Timeline for the CSS typing animation (ms)
+const CHAR_MS = 55;
+let clock = 500;
+const timeline = commands.map((cmd) => {
+    const delay = clock;
+    const outDelay = delay + cmd.command.length * CHAR_MS + 200;
+    clock = outDelay + 550;
+    return { ...cmd, delay, outDelay };
+});
+const lastOut = timeline[timeline.length - 1].outDelay;
+
+const enter = (ms: number) => ({ "--enter-delay": `${ms}ms` }) as CSSProperties;
+
+const photoClip = "polygon(0 14%, 14% 0, 100% 0, 100% 86%, 86% 100%, 0 100%)";
+
 const Hero = () => {
-    const [displayedText, setDisplayedText] = useState("");
-    const [showCursor, setShowCursor] = useState(true);
-    const [commandIndex, setCommandIndex] = useState(0);
-
-    useEffect(() => {
-        const currentCommand = commands[commandIndex];
-        if (!currentCommand) return;
-
-        const fullText = currentCommand.command;
-        let charIndex = 0;
-
-        const typingInterval = setInterval(() => {
-            if (charIndex <= fullText.length) {
-                setDisplayedText(fullText.slice(0, charIndex));
-                charIndex++;
-            } else {
-                clearInterval(typingInterval);
-                setTimeout(() => {
-                    if (commandIndex < commands.length - 1) {
-                        setCommandIndex(prev => prev + 1);
-                    }
-                }, 2000);
-            }
-        }, 80);
-
-        return () => clearInterval(typingInterval);
-    }, [commandIndex]);
-
-    useEffect(() => {
-        const cursorInterval = setInterval(() => {
-            setShowCursor(prev => !prev);
-        }, 500);
-        return () => clearInterval(cursorInterval);
-    }, []);
-
     return (
-        <section id="about" className="min-h-screen flex items-center pt-20 pb-10 px-6">
-            <div className="max-w-6xl mx-auto w-full">
-                <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
-                    {/* Left side - Terminal */}
-                    <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="order-2 lg:order-2 flex flex-col"
-                    >
-                        <div className="terminal shadow-2xl flex-1">
-                            <div className="terminal-header">
-                                <div className="terminal-dot terminal-dot-red" />
-                                <div className="terminal-dot terminal-dot-yellow" />
-                                <div className="terminal-dot terminal-dot-green" />
-                                <span className="ml-4 text-text-muted text-xs font-mono">
-                                    ~/portfolio — zsh
-                                </span>
-                            </div>
-                            <div className="terminal-body space-y-4">
-                                {commands.slice(0, commandIndex + 1).map((cmd, idx) => (
-                                    <div key={idx}>
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-accent-green">➜</span>
-                                            <span className="text-accent-cyan">~</span>
-                                            <span className="text-text-primary">
-                                                {idx === commandIndex ? displayedText : cmd.command}
-                                                {idx === commandIndex && showCursor && (
-                                                    <span className="text-accent-cyan">▋</span>
-                                                )}
-                                            </span>
-                                        </div>
-                                        {(idx < commandIndex || displayedText === cmd.command) && (
-                                            <motion.p
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                className="text-text-secondary ml-6 mt-1"
-                                            >
-                                                {cmd.output}
-                                            </motion.p>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Unified Action Bar - Social + Stats */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 }}
-                            className="flex flex-wrap items-center gap-3 mt-6"
-                        >
-                            {/* Social Links */}
-                            <Link
-                                href={personalInfo.github}
-                                target="_blank"
-                                className="p-2.5 rounded-lg bg-glass-bg text-text-secondary hover:text-accent-cyan transition-colors"
-                                title="GitHub"
-                            >
-                                <FaGithub size={20} />
-                            </Link>
-                            <Link
-                                href={personalInfo.linkedin}
-                                target="_blank"
-                                className="p-2.5 rounded-lg bg-glass-bg text-text-secondary hover:text-accent-blue transition-colors"
-                                title="LinkedIn"
-                            >
-                                <FaLinkedin size={20} />
-                            </Link>
-                            <Link
-                                href="https://line.me/ti/p/m7okkh6R6_"
-                                target="_blank"
-                                className="p-2.5 rounded-lg bg-glass-bg text-text-secondary hover:text-accent-green transition-colors"
-                                title="LINE"
-                            >
-                                <FaLine size={20} />
-                            </Link>
-
-                            {/* Divider - Hidden on very small screens if needed, or keep as is since we wrap */}
-                            <div className="hidden sm:block w-px h-6 bg-glass-border mx-2" />
-
-                            {/* Inline Stats */}
-                            <div className="flex items-center gap-3 flex-wrap">
-                                <span className="text-sm text-text-muted whitespace-nowrap">
-                                    <span className="text-accent-cyan font-mono font-semibold">{personalInfo.yearsExperience}+</span> yrs
-                                </span>
-                                <span className="text-text-muted/50 hidden sm:inline">•</span>
-                                <span className="text-sm text-text-muted whitespace-nowrap">
-                                    <span className="text-accent-green font-mono font-semibold">4</span> companies
-                                </span>
-                                <span className="text-text-muted/50 hidden sm:inline">•</span>
-                                <span className="text-sm text-text-muted whitespace-nowrap">
-                                    <span className="text-accent-purple font-mono font-semibold">10+</span> projects
-                                </span>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-
-                    {/* Right side - Profile */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="order-1 lg:order-1 flex flex-col items-center text-center"
-                    >
-                        {/* Profile Image - Cut Corners Design */}
-                        <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="relative mb-8"
-                        >
-                            {/* Gradient border container */}
+        <section id="top" className="relative pt-28 pb-12 md:pt-36 md:pb-20 lg:pt-40 lg:pb-24">
+            <div className="max-w-content mx-auto w-full px-5 sm:px-6">
+                <div className="grid gap-10 lg:gap-x-16 lg:grid-cols-[1.1fr_0.9fr] lg:grid-rows-[auto_auto] items-start">
+                    {/* Photo */}
+                    <div className="enter lg:col-start-2 lg:row-start-1 lg:justify-self-end" style={enter(0)}>
+                        <div className="relative w-32 h-32 sm:w-40 sm:h-40 lg:w-80 lg:h-80">
                             <div
-                                className="w-52 h-52 md:w-60 md:h-60 p-[3px] relative"
+                                className="absolute inset-0 p-[3px]"
                                 style={{
-                                    clipPath: 'polygon(0 15%, 15% 0, 100% 0, 100% 85%, 85% 100%, 0 100%)',
-                                    background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-blue))',
+                                    clipPath: photoClip,
+                                    background: "linear-gradient(135deg, var(--accent-cyan), var(--accent-purple))",
                                 }}
                             >
-                                <div
-                                    className="w-full h-full relative overflow-hidden bg-bg-primary"
-                                    style={{
-                                        clipPath: 'polygon(0 15%, 15% 0, 100% 0, 100% 85%, 85% 100%, 0 100%)',
-                                    }}
-                                >
+                                <div className="relative w-full h-full overflow-hidden bg-bg-secondary" style={{ clipPath: photoClip }}>
                                     <Image
                                         src={personalInfo.profileImage}
-                                        alt={personalInfo.name}
+                                        alt={`Portrait of ${personalInfo.name}`}
                                         fill
-                                        className="object-cover"
                                         priority
+                                        sizes="(min-width: 1024px) 320px, (min-width: 640px) 160px, 128px"
+                                        className="object-cover object-[60%_30%]"
                                     />
                                 </div>
                             </div>
-                            {/* Corner accents */}
-                            <div className="absolute top-0 left-[15%] w-8 h-[3px] bg-accent-cyan shadow-glow-cyan" />
-                            <div className="absolute top-[15%] left-0 w-[3px] h-8 bg-accent-cyan shadow-glow-cyan" />
-                            <div className="absolute bottom-0 right-[15%] w-8 h-[3px] bg-accent-purple shadow-glow-purple" />
-                            <div className="absolute bottom-[15%] right-0 w-[3px] h-8 bg-accent-purple shadow-glow-purple" />
-                        </motion.div>
+                            <span className="absolute top-0 left-[14%] w-[22%] h-[3px] bg-accent-cyan" aria-hidden />
+                            <span className="absolute bottom-0 right-[14%] w-[22%] h-[3px] bg-accent-purple" aria-hidden />
+                        </div>
+                    </div>
 
-                        {/* Name & Title */}
-                        <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
+                    {/* Intro */}
+                    <div className="lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:self-center">
+                        <p
+                            className="enter inline-flex items-center gap-2.5 chip !py-1.5 !px-3.5 !text-[13px]"
+                            style={enter(80)}
                         >
-                            <span className="text-gradient">{personalInfo.name}</span>
-                        </motion.h1>
+                            <span className="relative flex w-2 h-2" aria-hidden>
+                                <span className="ping-soft absolute inset-0 rounded-full bg-accent-green" />
+                                <span className="relative w-2 h-2 rounded-full bg-accent-green" />
+                            </span>
+                            {personalInfo.availability}
+                            <span className="text-text-muted" aria-hidden>
+                                ·
+                            </span>
+                            {personalInfo.location}
+                        </p>
 
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 }}
-                            className="text-xl text-text-secondary mb-6 font-mono"
+                        <h1
+                            className="enter mt-6 text-[2.75rem] leading-[1.05] sm:text-6xl lg:text-7xl font-bold tracking-tight text-text-primary"
+                            style={enter(140)}
                         >
-                            {"<"}<span className="text-accent-orange">{personalInfo.role}</span>{" />"}
-                        </motion.p>
+                            Tin Maung <span className="text-gradient">Zin</span>
+                        </h1>
 
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5 }}
-                            className="text-text-muted max-w-md text-sm leading-relaxed"
+                        <p className="enter mt-4 font-mono text-base sm:text-lg text-text-secondary" style={enter(200)}>
+                            <span className="text-text-muted">{"<"}</span>
+                            <span className="text-accent-orange">{personalInfo.role}</span>
+                            <span className="text-text-muted">{" />"}</span>
+                            <span className="hidden sm:inline text-text-muted mx-2" aria-hidden>
+                                ·
+                            </span>
+                            <span className="block sm:inline mt-1 sm:mt-0">{personalInfo.focus}</span>
+                        </p>
+
+                        <p
+                            className="enter mt-6 max-w-xl text-lg sm:text-xl leading-relaxed text-text-secondary text-pretty"
+                            style={enter(260)}
                         >
                             {personalInfo.tagline}
-                        </motion.p>
+                        </p>
 
-                        {/* Resume Button */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.6 }}
-                            className="mt-6"
-                        >
-                            <Link
-                                href={personalInfo.resumePath}
-                                target="_blank"
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent-cyan to-accent-blue text-black font-semibold rounded-lg hover:opacity-90 transition-opacity"
-                            >
-                                <IoDocumentText size={18} />
-                                Download Resume
-                            </Link>
-                        </motion.div>
-                    </motion.div>
-                </div>
+                        <div className="enter mt-8 grid grid-cols-1 min-[420px]:flex min-[420px]:flex-wrap items-center gap-3" style={enter(320)}>
+                            <a href={personalInfo.resumePath} target="_blank" rel="noopener" className="btn btn-primary">
+                                <IoDocumentText size={18} aria-hidden />
+                                Download resume
+                            </a>
+                            <a href="#contact" className="btn btn-ghost group">
+                                Get in touch
+                                <FiArrowRight
+                                    size={16}
+                                    aria-hidden
+                                    className="transition-transform duration-300 group-hover:translate-x-0.5"
+                                />
+                            </a>
+                        </div>
 
-                {/* Bio Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8 }}
-                    className="mt-16 lg:mt-24 max-w-3xl mx-auto"
-                >
-                    <p className="section-comment">{"// about me"}</p>
-                    <p className="text-text-secondary leading-relaxed text-center lg:text-left">
-                        {personalInfo.bio}
-                    </p>
-                    <div className="flex flex-wrap justify-center lg:justify-start gap-3 mt-6">
-                        <span className="tech-badge">
-                            📍 {personalInfo.location}
-                        </span>
-                        <span className="tech-badge">
-                            🎓 {personalInfo.education.degree.split(" ").slice(0, 3).join(" ")}
-                        </span>
-                        <span className="tech-badge">
-                            🏫 {personalInfo.education.university}
-                        </span>
+                        <div className="enter mt-8 flex flex-wrap items-center gap-x-5 gap-y-4" style={enter(380)}>
+                            <SocialLinks />
+                            <dl className="flex items-center gap-5 text-sm">
+                                {[
+                                    { value: `${personalInfo.yearsExperience}+`, label: "years" },
+                                    { value: `${experiences.length}`, label: "companies" },
+                                    { value: "10+", label: "projects" },
+                                ].map((stat) => (
+                                    <div key={stat.label} className="flex items-baseline gap-1.5">
+                                        <dt className="sr-only">{stat.label}</dt>
+                                        <dd className="font-mono font-semibold text-text-primary">{stat.value}</dd>
+                                        <span className="text-text-muted" aria-hidden>
+                                            {stat.label}
+                                        </span>
+                                    </div>
+                                ))}
+                            </dl>
+                        </div>
                     </div>
-                </motion.div>
+
+                    {/* Terminal */}
+                    <div
+                        className="enter lg:col-start-2 lg:row-start-2 lg:-mt-28 lg:mr-20 relative z-10"
+                        style={enter(450)}
+                        aria-hidden
+                    >
+                        <div className="terminal">
+                            <div className="terminal-header">
+                                <span className="terminal-dot terminal-dot-red" />
+                                <span className="terminal-dot terminal-dot-yellow" />
+                                <span className="terminal-dot terminal-dot-green" />
+                                <span className="ml-3 text-text-muted text-xs font-mono">~/portfolio — zsh</span>
+                            </div>
+                            <div className="terminal-body space-y-2.5">
+                                {timeline.map((line) => (
+                                    <div key={line.command}>
+                                        <div className="flex items-center gap-2 whitespace-nowrap">
+                                            <span className="text-accent-green">➜</span>
+                                            <span className="text-accent-cyan">~</span>
+                                            <span
+                                                className="type-cmd text-text-primary"
+                                                style={
+                                                    {
+                                                        "--chars": line.command.length,
+                                                        "--delay": `${line.delay}ms`,
+                                                    } as CSSProperties
+                                                }
+                                            >
+                                                {line.command}
+                                            </span>
+                                        </div>
+                                        <p
+                                            className={`type-out pl-6 text-[13px] ${
+                                                line.highlight ? "text-accent-green" : "text-text-secondary"
+                                            }`}
+                                            style={{ "--out-delay": `${line.outDelay}ms` } as CSSProperties}
+                                        >
+                                            {line.output}
+                                        </p>
+                                    </div>
+                                ))}
+                                <div
+                                    className="type-out flex items-center gap-2"
+                                    style={{ "--out-delay": `${lastOut + 400}ms` } as CSSProperties}
+                                >
+                                    <span className="text-accent-green">➜</span>
+                                    <span className="text-accent-cyan">~</span>
+                                    <span className="cursor-blink text-accent-cyan">▋</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     );

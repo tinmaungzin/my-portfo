@@ -1,108 +1,125 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { experiences } from "@/lib/data";
+import { experiences, Experience as ExperienceItem } from "@/lib/data";
+import SectionHeader from "../ui/SectionHeader";
+import Reveal from "../ui/Reveal";
+
+type Filter = "all" | ExperienceItem["track"];
+
+const filters: { key: Filter; label: string }[] = [
+    { key: "all", label: "All" },
+    { key: "engineering", label: "Engineering" },
+    { key: "research", label: "Research" },
+];
+
+const countFor = (key: Filter) =>
+    key === "all" ? experiences.length : experiences.filter((e) => e.track === key).length;
 
 const Experience = () => {
+    const [filter, setFilter] = useState<Filter>("all");
+    const visible = filter === "all" ? experiences : experiences.filter((e) => e.track === filter);
+
     return (
-        <section id="experience" className="py-20 px-6">
-            <div className="max-w-4xl mx-auto">
-                {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-16"
-                >
-                    <p className="section-comment mb-2">{"// work experience"}</p>
-                    <h2 className="text-3xl md:text-4xl font-bold">
-                        <span className="text-gradient">Career Timeline</span>
-                    </h2>
-                    <p className="text-text-muted mt-4 max-w-md mx-auto">
-                        A journey through companies and projects that shaped my skills
-                    </p>
-                </motion.div>
+        <section id="experience" className="py-20 md:py-28">
+            <div className="max-w-content mx-auto px-5 sm:px-6">
+                <SectionHeader
+                    comment="work experience"
+                    title="Where I've worked"
+                    subtitle="Seven years across software teams in Myanmar, Singapore and Thailand, plus two years in conflict and security research."
+                />
 
-                {/* Timeline */}
-                <div className="relative">
-                    {/* Vertical Line */}
-                    <div className="absolute left-6 md:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-accent-cyan via-accent-purple to-accent-orange" />
+                <Reveal className="mb-8 md:mb-10">
+                    <div role="group" aria-label="Filter experience" className="inline-flex p-1 rounded-xl bg-glass-bg border border-glass-border">
+                        {filters.map((f) => {
+                            const active = filter === f.key;
+                            return (
+                                <button
+                                    key={f.key}
+                                    type="button"
+                                    onClick={() => setFilter(f.key)}
+                                    aria-pressed={active}
+                                    className={`px-3.5 sm:px-4 py-2 rounded-lg text-sm transition-colors duration-200 ${
+                                        active
+                                            ? "bg-surface text-text-primary shadow-sm border border-glass-border"
+                                            : "text-text-secondary hover:text-text-primary border border-transparent"
+                                    }`}
+                                >
+                                    {f.label}
+                                    <span className="ml-1.5 font-mono text-xs text-text-muted">{countFor(f.key)}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </Reveal>
 
-                    {experiences.map((exp, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
-                            className="relative pl-16 md:pl-20 pb-12 last:pb-0"
-                        >
-                            {/* Timeline Node */}
-                            <div className="absolute left-3 md:left-5 w-6 h-6 md:w-7 md:h-7 rounded-full bg-bg-primary border-[3px] border-accent-cyan flex items-center justify-center z-10">
-                                <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-accent-cyan" />
-                            </div>
-
-                            {/* Year Badge - positioned prominently above the card */}
-                            <div className="inline-block mb-2 px-3 py-1 rounded-full bg-accent-cyan/20 border border-accent-cyan/30 font-mono text-sm text-accent-cyan font-semibold">
-                                {exp.startYear}
-                            </div>
-
-                            {/* Experience Card */}
-                            <div className="glass-card p-6 mt-4 hover-lift group">
-                                {/* Card Header */}
-                                <div className="flex flex-col sm:flex-row sm:items-start gap-4 mb-4">
-                                    {/* Company Logo */}
-                                    <div className="w-14 h-14 rounded-lg overflow-hidden bg-glass-border flex-shrink-0">
-                                        <Image
-                                            src={exp.logo}
-                                            alt={exp.company}
-                                            width={56}
-                                            height={56}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
-
-                                    <div className="flex-1">
-                                        <h3 className="text-lg font-semibold text-text-primary group-hover:text-accent-cyan transition-colors">
-                                            {exp.company}
-                                        </h3>
-                                        <p className="text-accent-purple font-medium text-sm">
-                                            {exp.role}
-                                        </p>
-                                        <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-text-muted">
-                                            <span>{exp.location}</span>
-                                            <span className="w-1 h-1 rounded-full bg-text-muted" />
-                                            <span>{exp.duration}</span>
+                <ol className="relative max-w-4xl">
+                    <span
+                        className="absolute left-[7px] md:left-[11px] top-3 bottom-3 w-px bg-gradient-to-b from-accent-cyan via-accent-purple to-transparent"
+                        aria-hidden
+                    />
+                    {visible.map((exp) => (
+                        <li key={exp.company} className="relative pl-7 md:pl-12 pb-5 md:pb-6 last:pb-0">
+                            <span
+                                className="absolute left-0 md:left-1 top-7 w-[15px] h-[15px] rounded-full border-2 bg-bg-primary"
+                                style={{ borderColor: exp.track === "research" ? "var(--accent-pink)" : "var(--accent-cyan)" }}
+                                aria-hidden
+                            />
+                            <Reveal>
+                                <article className="card card-interactive p-4 sm:p-5 md:p-6">
+                                    <header className="flex gap-4">
+                                        <div className="shrink-0 w-11 h-11 md:w-12 md:h-12 rounded-xl overflow-hidden bg-white ring-1 ring-glass-border">
+                                            <Image
+                                                src={exp.logo}
+                                                alt=""
+                                                width={48}
+                                                height={48}
+                                                sizes="48px"
+                                                className="w-full h-full object-contain"
+                                            />
                                         </div>
-                                    </div>
-                                </div>
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
+                                                <h3 className="font-semibold text-text-primary text-[17px] leading-snug">
+                                                    {exp.company}
+                                                </h3>
+                                                <p className="font-mono text-xs text-text-muted whitespace-nowrap">
+                                                    {exp.duration}
+                                                </p>
+                                            </div>
+                                            <p className="mt-0.5 text-sm font-medium text-accent-purple">{exp.role}</p>
+                                            <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-text-muted">
+                                                <span>{exp.location}</span>
+                                                {exp.employmentType && <span className="chip !py-0 !text-[11px]">{exp.employmentType}</span>}
+                                                {exp.current && (
+                                                    <span className="chip !py-0 !text-[11px] !text-accent-green">Current</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </header>
 
-                                {/* Bullet Points */}
-                                <ul className="space-y-2 mb-4">
-                                    {exp.bullets.map((bullet, idx) => (
-                                        <li key={idx} className="flex items-start gap-3 text-sm text-text-secondary">
-                                            <span className="text-accent-green mt-1.5 text-xs">▹</span>
-                                            <span>{bullet}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+                                    <ul className="mt-4 space-y-1.5 sm:space-y-2">
+                                        {exp.bullets.map((bullet) => (
+                                            <li key={bullet} className="flex gap-3 text-[14px] sm:text-[15px] leading-relaxed text-text-secondary">
+                                                <span className="mt-[9px] w-1 h-1 rounded-full bg-text-muted shrink-0" aria-hidden />
+                                                <span>{bullet}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
 
-                                {/* Technologies */}
-                                <div className="flex flex-wrap gap-2">
-                                    {exp.technologies.map((tech, idx) => (
-                                        <span
-                                            key={idx}
-                                            className="px-2 py-1 text-xs rounded-md bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20"
-                                        >
-                                            {tech}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </motion.div>
+                                    <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Technologies and skills">
+                                        {exp.technologies.map((tech) => (
+                                            <li key={tech} className="chip">
+                                                {tech}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </article>
+                            </Reveal>
+                        </li>
                     ))}
-                </div>
+                </ol>
             </div>
         </section>
     );

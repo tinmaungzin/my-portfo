@@ -1,31 +1,27 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useTheme } from "./ThemeContext";
 import { FiSun, FiMoon } from "react-icons/fi";
 
 const ThemeToggle = () => {
     const { theme, toggleTheme } = useTheme();
+    const next = theme === "dark" ? "light" : "dark";
 
     return (
-        <motion.button
-            onClick={toggleTheme}
-            className="relative p-2 rounded-lg bg-glass-bg border border-glass-border hover:border-accent-cyan/50 transition-colors"
-            whileTap={{ scale: 0.95 }}
-            aria-label="Toggle theme"
+        <button
+            type="button"
+            onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                toggleTheme({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
+            }}
+            className="icon-btn"
+            aria-label={`Switch to ${next} theme`}
+            title={`Switch to ${next} theme`}
         >
-            <motion.div
-                initial={false}
-                animate={{ rotate: theme === "dark" ? 0 : 180 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
-                {theme === "dark" ? (
-                    <FiMoon className="w-4 h-4 text-accent-purple" />
-                ) : (
-                    <FiSun className="w-4 h-4 text-accent-orange" />
-                )}
-            </motion.div>
-        </motion.button>
+            {/* Both icons are rendered; CSS picks one, so the right icon shows before hydration */}
+            <FiSun className="w-[18px] h-[18px] theme-icon-sun" aria-hidden />
+            <FiMoon className="w-[18px] h-[18px] theme-icon-moon" aria-hidden />
+        </button>
     );
 };
 

@@ -1,137 +1,123 @@
-"use client";
-
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { FaGithub, FaExternalLinkAlt, FaFolder } from "react-icons/fa";
-import { projects } from "@/lib/data";
+import { FaGithub } from "react-icons/fa";
+import { FiArrowUpRight, FiFolder } from "react-icons/fi";
+import { projects, personalInfo } from "@/lib/data";
+import SectionHeader from "../ui/SectionHeader";
+import Reveal from "../ui/Reveal";
 
 const Projects = () => {
-    const featuredProject = projects.find(p => p.featured);
-    const otherProjects = projects.filter(p => !p.featured);
+    const featured = projects.find((p) => p.featured);
+    const others = projects.filter((p) => !p.featured);
 
     return (
-        <section id="projects" className="py-20 px-6">
-            <div className="max-w-5xl mx-auto">
-                {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-16"
-                >
-                    <p className="section-comment mb-2">{"// projects"}</p>
-                    <h2 className="text-3xl md:text-4xl font-bold">
-                        <span className="text-gradient">Things I&apos;ve Built</span>
-                    </h2>
-                    <p className="text-text-muted mt-4 max-w-md mx-auto">
-                        A collection of projects that showcase my skills and interests
-                    </p>
-                </motion.div>
+        <section id="projects" className="py-20 md:py-28">
+            <div className="max-w-content mx-auto px-5 sm:px-6">
+                <SectionHeader
+                    comment="projects"
+                    title="Things I've built"
+                    subtitle="Side projects where I try out new tools, from real-time messaging to scraping and analysing the Bangkok rental market."
+                />
 
-                {/* Featured Project */}
-                {featuredProject && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="mb-12"
-                    >
-                        <div className="ide-card overflow-hidden">
-                            <div className="ide-card-header">
-                                <FaFolder className="text-accent-cyan" />
-                                <span className="text-text-secondary">{featuredProject.name}</span>
-                                <span className="text-xs text-accent-green ml-2 px-2 py-0.5 bg-accent-green/10 rounded">
-                                    Featured
-                                </span>
-                                <div className="flex-1" />
-                                <Link
-                                    href={featuredProject.link}
-                                    target="_blank"
-                                    className="text-text-muted hover:text-accent-cyan transition-colors"
-                                >
-                                    <FaGithub size={16} />
-                                </Link>
-                            </div>
-                            <div className="p-6">
-                                <p className="text-text-secondary leading-relaxed mb-6">
-                                    {featuredProject.description}
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                    {featuredProject.technologies.map((tech, idx) => (
-                                        <span
-                                            key={idx}
-                                            className="px-3 py-1 text-xs rounded-full border border-accent-cyan/30 text-accent-cyan bg-accent-cyan/5"
-                                        >
-                                            {tech}
-                                        </span>
-                                    ))}
+                {featured && (
+                    <Reveal className="mb-6">
+                        <a
+                            href={featured.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group block rounded-2xl p-px bg-gradient-to-br from-accent-cyan/60 via-glass-border to-accent-purple/60"
+                            aria-label={`${featured.name} on GitHub (opens in a new tab)`}
+                        >
+                            <div className="rounded-[15px] bg-surface p-6 md:p-8 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
+                                <div>
+                                    <div className="flex items-center gap-3 font-mono text-sm">
+                                        <FiFolder className="text-accent-cyan" aria-hidden />
+                                        <span className="text-text-secondary">featured project</span>
+                                    </div>
+                                    <h3 className="mt-3 text-2xl md:text-3xl font-bold tracking-tight text-text-primary">
+                                        {featured.name}
+                                    </h3>
+                                    <p className="mt-3 max-w-2xl text-text-secondary leading-relaxed text-pretty">
+                                        {featured.description}
+                                    </p>
+                                    <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Technologies">
+                                        {featured.technologies.map((tech) => (
+                                            <li key={tech} className="chip chip-accent">
+                                                {tech}
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
+                                <span className="btn btn-ghost self-start md:self-end">
+                                    <FaGithub size={16} aria-hidden />
+                                    View code
+                                    <FiArrowUpRight
+                                        size={16}
+                                        aria-hidden
+                                        className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                                    />
+                                </span>
                             </div>
-                        </div>
-                    </motion.div>
+                        </a>
+                    </Reveal>
                 )}
 
-                {/* Other Projects Grid */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {otherProjects.map((project, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
-                        >
-                            <Link href={project.link} target="_blank" className="block h-full">
-                                <div className="ide-card h-full flex flex-col group">
-                                    <div className="ide-card-header">
-                                        <FaFolder style={{ color: project.color || '#22d3ee' }} />
-                                        <span className="text-text-secondary truncate">{project.name}</span>
-                                        <div className="flex-1" />
-                                        <FaExternalLinkAlt
-                                            size={12}
-                                            className="text-text-muted group-hover:text-accent-cyan transition-colors"
-                                        />
-                                    </div>
-                                    <div className="p-5 flex-1 flex flex-col">
-                                        <p className="text-text-muted text-sm leading-relaxed flex-1 mb-4">
-                                            {project.description}
-                                        </p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {project.technologies.slice(0, 3).map((tech, idx) => (
-                                                <span
-                                                    key={idx}
-                                                    className="text-xs text-text-muted font-mono"
-                                                >
-                                                    {tech}
-                                                    {idx < Math.min(project.technologies.length - 1, 2) && (
-                                                        <span className="text-text-muted mx-1">•</span>
-                                                    )}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {others.map((project, i) => (
+                        <Reveal key={project.name} delay={i * 80} className="h-full">
+                            <a
+                                href={project.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group card card-interactive h-full p-6 flex flex-col"
+                                aria-label={`${project.name} on GitHub (opens in a new tab)`}
+                            >
+                                <div className="flex items-center justify-between">
+                                    <span
+                                        className="w-10 h-10 rounded-xl grid place-items-center"
+                                        style={{
+                                            color: project.color,
+                                            background: `color-mix(in srgb, ${project.color} 14%, transparent)`,
+                                        }}
+                                        aria-hidden
+                                    >
+                                        <FiFolder size={18} />
+                                    </span>
+                                    <FiArrowUpRight
+                                        size={18}
+                                        aria-hidden
+                                        className="text-text-muted transition-all duration-300 group-hover:text-accent-cyan group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                                    />
                                 </div>
-                            </Link>
-                        </motion.div>
+                                <h3 className="mt-5 font-semibold text-lg text-text-primary group-hover:text-accent-cyan transition-colors">
+                                    {project.name}
+                                </h3>
+                                <p className="mt-2 flex-1 text-[15px] leading-relaxed text-text-secondary">
+                                    {project.description}
+                                </p>
+                                <ul className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-text-muted" aria-label="Technologies">
+                                    {project.technologies.map((tech) => (
+                                        <li key={tech}>{tech}</li>
+                                    ))}
+                                </ul>
+                            </a>
+                        </Reveal>
                     ))}
                 </div>
 
-                {/* View More Link */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    className="text-center mt-12"
-                >
-                    <Link
-                        href="https://github.com/tinmaungzin?tab=repositories"
+                <Reveal className="mt-10">
+                    <a
+                        href={`${personalInfo.github}?tab=repositories`}
                         target="_blank"
-                        className="inline-flex items-center gap-2 text-text-muted hover:text-accent-cyan transition-colors text-sm font-mono"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 font-mono text-sm text-text-secondary hover:text-accent-cyan transition-colors"
                     >
-                        <span>{">"} view more on github</span>
-                        <FaExternalLinkAlt size={12} />
-                    </Link>
-                </motion.div>
+                        <span aria-hidden>{">"}</span> more on GitHub
+                        <FiArrowUpRight
+                            size={14}
+                            aria-hidden
+                            className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                        />
+                    </a>
+                </Reveal>
             </div>
         </section>
     );

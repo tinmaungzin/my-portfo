@@ -1,117 +1,51 @@
-"use client";
-
-import { useState } from "react";
-import { motion } from "framer-motion";
 import { skills, skillCategories } from "@/lib/data";
+import SectionHeader from "../ui/SectionHeader";
+import Reveal from "../ui/Reveal";
 
-const Skills = () => {
-    const [activeCategory, setActiveCategory] = useState<string | null>(null);
+const Skills = () => (
+    <section id="skills" className="py-20 md:py-28">
+        <div className="max-w-content mx-auto px-5 sm:px-6">
+            <SectionHeader
+                comment="tech stack"
+                title="Skills and tools"
+                subtitle="What I use to build, ship and research, grouped by where it fits."
+            />
 
-    const filteredSkills = activeCategory
-        ? skills.filter(s => s.category === activeCategory)
-        : skills;
-
-    return (
-        <section id="skills" className="py-20 px-6">
-            <div className="max-w-4xl mx-auto">
-                {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-16"
-                >
-                    <p className="section-comment mb-2">{"// tech stack"}</p>
-                    <h2 className="text-3xl md:text-4xl font-bold">
-                        <span className="text-gradient">Skills & Technologies</span>
-                    </h2>
-                    <p className="text-text-muted mt-4 max-w-md mx-auto">
-                        Technologies I work with on a daily basis
-                    </p>
-                </motion.div>
-
-                {/* Category Filter */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="flex flex-wrap justify-center gap-3 mb-12"
-                >
-                    <button
-                        onClick={() => setActiveCategory(null)}
-                        className={`px-4 py-2 rounded-full text-sm font-mono transition-all ${activeCategory === null
-                            ? "bg-accent-cyan text-black"
-                            : "bg-glass-bg text-text-secondary hover:bg-glass-border"
-                            }`}
-                    >
-                        All
-                    </button>
-                    {skillCategories.map((cat) => (
-                        <button
-                            key={cat.key}
-                            onClick={() => setActiveCategory(cat.key)}
-                            className={`px-4 py-2 rounded-full text-sm font-mono transition-all ${activeCategory === cat.key
-                                ? "text-black"
-                                : "bg-glass-bg text-text-secondary hover:bg-glass-border"
-                                }`}
-                            style={{
-                                backgroundColor: activeCategory === cat.key ? cat.color : undefined,
-                            }}
-                        >
-                            {cat.label}
-                        </button>
-                    ))}
-                </motion.div>
-
-                {/* Skills Grid */}
-                <motion.div
-                    layout
-                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
-                >
-                    {filteredSkills.map((skill, index) => {
-                        const category = skillCategories.find(c => c.key === skill.category);
-                        return (
-                            <motion.div
-                                key={skill.name}
-                                layout
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.8 }}
-                                transition={{ delay: index * 0.02 }}
-                                className="glass-card p-4 text-center hover-lift group cursor-default"
-                            >
-                                <p className="text-text-primary font-medium text-sm group-hover:text-text-primary transition-colors">
-                                    {skill.name}
-                                </p>
-                                <div
-                                    className="w-10 h-0.5 mx-auto mt-2 rounded-full opacity-50 group-hover:opacity-100 transition-opacity"
-                                    style={{ backgroundColor: category?.color || '#22d3ee' }}
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {skillCategories.map((cat, i) => {
+                    const items = skills.filter((s) => s.category === cat.key);
+                    return (
+                        <Reveal key={cat.key} delay={(i % 3) * 80} className="h-full">
+                            <div className="card card-interactive h-full p-6 relative overflow-hidden">
+                                <span
+                                    className="absolute inset-x-0 top-0 h-px"
+                                    style={{ background: `linear-gradient(90deg, transparent, ${cat.color}, transparent)` }}
+                                    aria-hidden
                                 />
-                            </motion.div>
-                        );
-                    })}
-                </motion.div>
-
-                {/* Skill Categories Legend */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    className="flex flex-wrap justify-center gap-6 mt-12 text-xs text-text-muted"
-                >
-                    {skillCategories.map((cat) => (
-                        <div key={cat.key} className="flex items-center gap-2">
-                            <div
-                                className="w-3 h-3 rounded-full"
-                                style={{ backgroundColor: cat.color }}
-                            />
-                            <span>{cat.label}</span>
-                        </div>
-                    ))}
-                </motion.div>
+                                <div className="flex items-center justify-between">
+                                    <h3 className="flex items-center gap-2.5 font-semibold text-text-primary">
+                                        <span className="w-2 h-2 rounded-full" style={{ background: cat.color }} aria-hidden />
+                                        {cat.label}
+                                    </h3>
+                                    <span className="font-mono text-xs text-text-muted">{items.length}</span>
+                                </div>
+                                <ul className="mt-5 flex flex-wrap gap-2">
+                                    {items.map((skill) => (
+                                        <li
+                                            key={skill.name}
+                                            className="px-3 py-1.5 rounded-lg text-[13px] text-text-primary bg-glass-bg border border-glass-border"
+                                        >
+                                            {skill.name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </Reveal>
+                    );
+                })}
             </div>
-        </section>
-    );
-};
+        </div>
+    </section>
+);
 
 export default Skills;

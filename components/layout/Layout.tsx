@@ -4,36 +4,28 @@ import { ReactNode } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import Navbar from "./Navbar";
 
-interface LayoutProps {
-    children: ReactNode;
-}
-
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children }: { children: ReactNode }) => {
     const { scrollYProgress } = useScroll();
-    const scaleX = useSpring(scrollYProgress, {
-        stiffness: 100,
-        damping: 30,
-        restDelta: 0.001,
-    });
+    const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
 
     return (
-        <div className="min-h-screen bg-bg-primary relative">
-            {/* Scroll Progress Bar */}
+        <div className="min-h-screen relative">
+            {/* Scroll progress */}
             <motion.div
-                className="fixed top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-cyan via-accent-purple to-accent-orange z-50 origin-left"
+                className="motion-only fixed top-0 inset-x-0 h-0.5 z-[55] origin-left bg-gradient-to-r from-accent-cyan via-accent-purple to-accent-orange"
                 style={{ scaleX }}
+                aria-hidden
             />
 
-            {/* Floating gradient orbs (background decoration) */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-[color:var(--accent-cyan)] opacity-10 rounded-full blur-3xl animate-float" />
-                <div className="absolute top-1/3 -left-40 w-96 h-96 bg-[color:var(--accent-purple)] opacity-10 rounded-full blur-3xl animate-float-delayed" />
-                <div className="absolute bottom-20 right-1/4 w-64 h-64 bg-[color:var(--accent-orange)] opacity-10 rounded-full blur-3xl animate-float" />
+            {/* Ambient light, decorative and only on capable devices */}
+            <div className="motion-only fixed inset-0 overflow-hidden pointer-events-none -z-0" aria-hidden>
+                <div className="orb animate-float -top-32 -right-24 w-[28rem] h-[28rem] bg-[color:var(--accent-cyan)]" />
+                <div className="orb animate-float-delayed top-[40%] -left-40 w-[26rem] h-[26rem] bg-[color:var(--accent-purple)]" />
             </div>
 
             <Navbar />
 
-            <main className="relative z-10">
+            <main id="main" className="relative z-10">
                 {children}
             </main>
         </div>
