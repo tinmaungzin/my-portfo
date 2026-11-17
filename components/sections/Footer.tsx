@@ -36,8 +36,8 @@ const Footer = () => {
                         {personalInfo.availability}. Email is the fastest way to reach me.
                     </p>
                     <div className="mt-5 flex flex-wrap items-center gap-2">
-                        <a href={`mailto:${personalInfo.email}`} className="btn btn-ink">
-                            <FiMail aria-hidden /> {personalInfo.email}
+                        <a href={`mailto:${personalInfo.email}`} className="btn btn-ink min-w-0 max-w-full">
+                            <FiMail aria-hidden className="shrink-0" /> <span className="truncate">{personalInfo.email}</span>
                         </a>
                         <button type="button" onClick={copyEmail} className="btn btn-line">
                             {copied ? <FiCheck aria-hidden /> : <FiCopy aria-hidden />}

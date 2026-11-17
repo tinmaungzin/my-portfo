@@ -56,7 +56,7 @@ const Navbar = () => {
             </nav>
 
             {open && (
-                <div id="mobile-menu" className="border-t border-line px-5 pb-5 pt-1 md:hidden">
+                <div id="mobile-menu" className="border-t border-line bg-card px-5 pb-5 pt-1 md:hidden">
                     <ul>
                         {navLinks.map((link) => (
                             <li key={link.href} className="border-b border-line">
