@@ -11,7 +11,7 @@ import { personalInfo, experiences } from "@/lib/data";
 const title = `${personalInfo.name} · ${personalInfo.role} (${personalInfo.focus})`;
 const description =
     "AI and automation engineer in Bangkok with 7 years of software experience: LLM apps, RAG, agent workflows, Python automation and full-stack web development. Open to roles in Bangkok or remote.";
-const ogImage = `${personalInfo.siteUrl}/tmz-og.png`;
+const ogImage = `${personalInfo.siteUrl}/og-ai-automation.png`;
 
 const personSchema = {
     "@context": "https://schema.org",
@@ -45,8 +45,8 @@ export default function Home() {
                 <meta property="og:title" content={title} />
                 <meta property="og:description" content={description} />
                 <meta property="og:image" content={ogImage} />
-                <meta property="og:image:width" content="1024" />
-                <meta property="og:image:height" content="1024" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
 
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content={title} />
