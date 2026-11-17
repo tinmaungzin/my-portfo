@@ -10,7 +10,7 @@ import { personalInfo, experiences } from "@/lib/data";
 
 const title = `${personalInfo.name} · ${personalInfo.role} (${personalInfo.focus})`;
 const description =
-    "Software engineer in Bangkok with 7 years in PHP, JavaScript and Python web development, plus conflict data research experience in Myanmar. Open to remote roles.";
+    "AI and automation engineer in Bangkok with 7 years of software experience: LLM apps, RAG, agent workflows, Python automation and full-stack web development. Open to roles in Bangkok or remote.";
 const ogImage = `${personalInfo.siteUrl}/tmz-og.png`;
 
 const personSchema = {
@@ -24,8 +24,8 @@ const personSchema = {
     address: { "@type": "PostalAddress", addressLocality: "Bangkok", addressCountry: "TH" },
     alumniOf: { "@type": "CollegeOrUniversity", name: personalInfo.education.university },
     worksFor: { "@type": "Organization", name: experiences.find((e) => e.current)?.company },
-    knowsLanguage: ["my", "en", "th"],
-    knowsAbout: ["Web development", "PHP", "Drupal", "React", "Python", "Web crawling", "Conflict data research"],
+    knowsLanguage: ["my", "en"],
+    knowsAbout: ["Large language models", "Retrieval-augmented generation", "AI agents", "Automation", "Python", "React", "Next.js", "Laravel"],
     sameAs: [personalInfo.github, personalInfo.linkedin],
 };
 
@@ -62,8 +62,8 @@ export default function Home() {
             <Layout>
                 <Hero />
                 <About />
-                <Experience />
                 <Projects />
+                <Experience />
                 <Skills />
                 <Footer />
             </Layout>

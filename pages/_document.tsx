@@ -8,7 +8,7 @@ const bootScript = `(function () {
   var t = null;
   try { t = localStorage.getItem("theme"); } catch (e) {}
   if (t !== "light" && t !== "dark") {
-    t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
   d.setAttribute("data-theme", t);
 
@@ -55,11 +55,11 @@ const bootScript = `(function () {
 
 export default function Document() {
   return (
-    <Html lang="en" data-theme="dark" data-motion="reduced">
+    <Html lang="en" data-theme="light" data-motion="reduced">
       <Head>
         <meta name="google-site-verification" content="xmESV8vBZf81eyCYnWDjLE_vhIqtb9Pj54geaGT2NQI" />
-        <meta name="theme-color" content="#08090d" media="(prefers-color-scheme: dark)" />
-        <meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#0d0f12" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)" />
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </Head>
       <body>

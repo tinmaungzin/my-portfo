@@ -1,69 +1,42 @@
-import { FiCode, FiDatabase, FiGlobe, FiMapPin, FiMessageCircle, FiBookOpen } from "react-icons/fi";
-import { personalInfo } from "@/lib/data";
-import SectionHeader from "../ui/SectionHeader";
+import { experiences, personalInfo } from "@/lib/data";
 import Reveal from "../ui/Reveal";
 
-const highlightIcons = [FiCode, FiDatabase, FiGlobe];
-const highlightColors = ["var(--accent-cyan)", "var(--accent-orange)", "var(--accent-pink)"];
+const current = experiences.find((e) => e.current);
 
 const facts = [
-    { Icon: FiMapPin, label: "Based in", value: `${personalInfo.location} · remote` },
-    { Icon: FiMessageCircle, label: "Languages", value: personalInfo.languages.join(", ") },
-    { Icon: FiBookOpen, label: "Education", value: `B.E., ${personalInfo.education.university}` },
+    { label: "Current role", value: current ? `${current.role}, ${current.company}` : personalInfo.role },
+    { label: "Focus", value: personalInfo.focus },
+    { label: "Location", value: personalInfo.location },
+    { label: "Languages", value: personalInfo.languages.join(", ") },
+    { label: "Education", value: `${personalInfo.education.degree}, ${personalInfo.education.university}` },
 ];
 
 const About = () => (
-    <section id="about" className="py-20 md:py-28">
-        <div className="max-w-content mx-auto px-5 sm:px-6">
-            <SectionHeader comment="about me" title="Engineer by trade, researcher by experience" />
-
-            <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
-                <Reveal>
-                    <div className="space-y-5 text-[17px] leading-[1.75] text-text-secondary text-pretty">
-                        {personalInfo.bio.map((paragraph) => (
-                            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-                        ))}
-                    </div>
-
-                    <dl className="mt-8 grid gap-3 sm:grid-cols-1">
-                        {facts.map(({ Icon, label, value }) => (
-                            <div key={label} className="flex items-start gap-3 text-sm">
-                                <Icon className="mt-0.5 shrink-0 text-accent-cyan" size={16} aria-hidden />
-                                <dt className="text-text-muted w-24 shrink-0">{label}</dt>
-                                <dd className="text-text-primary">{value}</dd>
-                            </div>
-                        ))}
-                    </dl>
-                </Reveal>
-
-                <div className="grid gap-4">
-                    {personalInfo.highlights.map((item, i) => {
-                        const Icon = highlightIcons[i % highlightIcons.length];
-                        const color = highlightColors[i % highlightColors.length];
-                        return (
-                            <Reveal key={item.title} delay={i * 90}>
-                                <div className="card card-interactive p-5 sm:p-6 flex gap-4">
-                                    <span
-                                        className="shrink-0 w-11 h-11 rounded-xl grid place-items-center"
-                                        style={{
-                                            color,
-                                            background: `color-mix(in srgb, ${color} 12%, transparent)`,
-                                        }}
-                                        aria-hidden
-                                    >
-                                        <Icon size={20} />
-                                    </span>
-                                    <div>
-                                        <h3 className="font-semibold text-text-primary">{item.title}</h3>
-                                        <p className="mt-1 text-sm leading-relaxed text-text-secondary">{item.body}</p>
-                                    </div>
-                                </div>
-                            </Reveal>
-                        );
-                    })}
+    <section id="about" aria-labelledby="about-title" className="mx-auto max-w-content px-5 pb-6 sm:px-8">
+        <h2 id="about-title" className="sr-only">
+            About
+        </h2>
+        <Reveal className="grid gap-4 lg:grid-cols-[1fr_380px]">
+            <div className="card p-6">
+                <p className="label">Profile</p>
+                <div className="mt-3 space-y-3 text-[15.5px] leading-relaxed text-ink-2">
+                    {personalInfo.bio.map((p) => (
+                        <p key={p.slice(0, 24)}>{p}</p>
+                    ))}
                 </div>
             </div>
-        </div>
+            <div className="card p-6">
+                <p className="label">At a glance</p>
+                <dl className="mt-1 text-[14px]">
+                    {facts.map((f) => (
+                        <div key={f.label} className="flex justify-between gap-6 border-b border-line py-2.5 last:border-0">
+                            <dt className="shrink-0 text-ink-3">{f.label}</dt>
+                            <dd className="text-right font-medium">{f.value}</dd>
+                        </div>
+                    ))}
+                </dl>
+            </div>
+        </Reveal>
     </section>
 );
 

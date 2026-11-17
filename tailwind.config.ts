@@ -10,35 +10,30 @@ const config: Config = {
     extend: {
       colors: {
         // Theme-aware colors using CSS variables (see styles/globals.css)
-        "bg-primary": "var(--bg-primary)",
-        "bg-secondary": "var(--bg-secondary)",
-        "bg-tertiary": "var(--bg-tertiary)",
-        surface: "var(--surface)",
-
-        text: {
-          primary: "var(--text-primary)",
-          secondary: "var(--text-secondary)",
-          muted: "var(--text-muted)",
+        paper: {
+          DEFAULT: "var(--paper)",
+          2: "var(--paper-2)",
+          3: "var(--paper-3)",
         },
-
-        accent: {
-          cyan: "var(--accent-cyan)",
-          green: "var(--accent-green)",
-          purple: "var(--accent-purple)",
-          orange: "var(--accent-orange)",
-          pink: "var(--accent-pink)",
-          blue: "var(--accent-blue)",
+        card: "var(--card)",
+        ink: {
+          DEFAULT: "var(--ink)",
+          2: "var(--ink-2)",
+          3: "var(--ink-3)",
         },
-
-        terminal: {
-          bg: "var(--terminal-bg)",
-          border: "var(--terminal-border)",
-          header: "var(--terminal-header)",
+        line: {
+          DEFAULT: "var(--line)",
+          strong: "var(--line-strong)",
         },
-
-        glass: {
-          bg: "var(--glass-bg)",
-          border: "var(--glass-border)",
+        signal: {
+          DEFAULT: "var(--signal)",
+          ink: "var(--signal-ink)",
+          soft: "var(--signal-soft)",
+          on: "var(--on-signal)",
+        },
+        ok: {
+          DEFAULT: "var(--ok)",
+          soft: "var(--ok-soft)",
         },
       },
       fontFamily: {

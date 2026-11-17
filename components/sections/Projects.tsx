@@ -1,126 +1,105 @@
-import { FaGithub } from "react-icons/fa";
-import { FiArrowUpRight, FiFolder } from "react-icons/fi";
-import { projects, personalInfo } from "@/lib/data";
+import { FiArrowUpRight, FiLock } from "react-icons/fi";
+import { projects, type Project } from "@/lib/data";
 import SectionHeader from "../ui/SectionHeader";
 import Reveal from "../ui/Reveal";
 
-const Projects = () => {
-    const featured = projects.find((p) => p.featured);
-    const others = projects.filter((p) => !p.featured);
+const toneClass = { live: "", private: "is-private", open: "is-open" } as const;
+const toneText = { live: "text-ok", private: "text-ink-3", open: "text-signal-ink" } as const;
 
+const Pipeline = ({ steps, ai = [] }: { steps: string[]; ai?: number[] }) => (
+    <ol className="pipe" aria-label="Pipeline steps">
+        {steps.map((step, i) => (
+            <li key={step} className={ai.includes(i) ? "ai" : undefined}>
+                <span className="sr-only">
+                    Step {i + 1}
+                    {ai.includes(i) ? " (AI model)" : ""}:{" "}
+                </span>
+                {step}
+            </li>
+        ))}
+    </ol>
+);
+
+const SystemCard = ({ project }: { project: Project }) => {
+    const tone = project.state?.tone ?? "private";
     return (
-        <section id="projects" className="py-20 md:py-28">
-            <div className="max-w-content mx-auto px-5 sm:px-6">
-                <SectionHeader
-                    comment="projects"
-                    title="Things I've built"
-                    subtitle="Side projects where I try out new tools, from real-time messaging to scraping and analysing the Bangkok rental market."
-                />
-
-                {featured && (
-                    <Reveal className="mb-6">
-                        <a
-                            href={featured.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group block rounded-2xl p-px bg-gradient-to-br from-accent-cyan/60 via-glass-border to-accent-purple/60"
-                            aria-label={`${featured.name} on GitHub (opens in a new tab)`}
-                        >
-                            <div className="rounded-[15px] bg-surface p-6 md:p-8 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-                                <div>
-                                    <div className="flex items-center gap-3 font-mono text-sm">
-                                        <FiFolder className="text-accent-cyan" aria-hidden />
-                                        <span className="text-text-secondary">featured project</span>
-                                    </div>
-                                    <h3 className="mt-3 text-2xl md:text-3xl font-bold tracking-tight text-text-primary">
-                                        {featured.name}
-                                    </h3>
-                                    <p className="mt-3 max-w-2xl text-text-secondary leading-relaxed text-pretty">
-                                        {featured.description}
-                                    </p>
-                                    <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Technologies">
-                                        {featured.technologies.map((tech) => (
-                                            <li key={tech} className="chip chip-accent">
-                                                {tech}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                <span className="btn btn-ghost self-start md:self-end">
-                                    <FaGithub size={16} aria-hidden />
-                                    View code
-                                    <FiArrowUpRight
-                                        size={16}
-                                        aria-hidden
-                                        className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                                    />
-                                </span>
-                            </div>
-                        </a>
-                    </Reveal>
+        <article className="card flex w-full flex-col p-5">
+            <div className="flex items-start justify-between gap-4">
+                <h3 className="text-[16.5px] font-semibold leading-snug">{project.name}</h3>
+                {project.state && (
+                    <span className={`flex shrink-0 items-center gap-2 pt-0.5 text-[12.5px] ${toneText[tone]}`}>
+                        <span className={`pulse-dot ${toneClass[tone]}`} aria-hidden />
+                        {project.state.label}
+                    </span>
                 )}
+            </div>
+            <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-2">{project.hook}</p>
 
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {others.map((project, i) => (
-                        <Reveal key={project.name} delay={i * 80} className="h-full">
-                            <a
-                                href={project.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group card card-interactive h-full p-6 flex flex-col"
-                                aria-label={`${project.name} on GitHub (opens in a new tab)`}
-                            >
-                                <div className="flex items-center justify-between">
-                                    <span
-                                        className="w-10 h-10 rounded-xl grid place-items-center"
-                                        style={{
-                                            color: project.color,
-                                            background: `color-mix(in srgb, ${project.color} 14%, transparent)`,
-                                        }}
-                                        aria-hidden
-                                    >
-                                        <FiFolder size={18} />
-                                    </span>
-                                    <FiArrowUpRight
-                                        size={18}
-                                        aria-hidden
-                                        className="text-text-muted transition-all duration-300 group-hover:text-accent-cyan group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                                    />
-                                </div>
-                                <h3 className="mt-5 font-semibold text-lg text-text-primary group-hover:text-accent-cyan transition-colors">
-                                    {project.name}
-                                </h3>
-                                <p className="mt-2 flex-1 text-[15px] leading-relaxed text-text-secondary">
-                                    {project.description}
-                                </p>
-                                <ul className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-text-muted" aria-label="Technologies">
-                                    {project.technologies.map((tech) => (
-                                        <li key={tech}>{tech}</li>
-                                    ))}
-                                </ul>
-                            </a>
-                        </Reveal>
-                    ))}
+            {project.steps && (
+                <div className="mt-4">
+                    <Pipeline steps={project.steps} ai={project.aiSteps} />
                 </div>
+            )}
 
-                <Reveal className="mt-10">
+            {project.metric && (
+                <p className="mt-3 text-[13px] text-ink-2">
+                    <span className="font-semibold text-ink">{project.metric.split(" ")[0]}</span>{" "}
+                    {project.metric.split(" ").slice(1).join(" ")}
+                </p>
+            )}
+
+            <details className="group mt-3 text-[14px]">
+                <summary className="cursor-pointer list-none text-[13px] font-medium text-ink-3 hover:text-ink [&::-webkit-details-marker]:hidden">
+                    <span className="group-open:hidden">How it works +</span>
+                    <span className="hidden group-open:inline">Hide details −</span>
+                </summary>
+                <p className="mt-2 leading-relaxed text-ink-2">{project.description}</p>
+            </details>
+
+            <div className="mt-auto pt-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
+                <p className="font-mono text-[12px] text-ink-3">{project.technologies.slice(0, 4).join(" · ")}</p>
+                {project.link ? (
                     <a
-                        href={`${personalInfo.github}?tab=repositories`}
+                        href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 font-mono text-sm text-text-secondary hover:text-accent-cyan transition-colors"
+                        className="inline-flex items-center gap-1 text-[13px] font-medium text-signal-ink hover:underline"
                     >
-                        <span aria-hidden>{">"}</span> more on GitHub
-                        <FiArrowUpRight
-                            size={14}
-                            aria-hidden
-                            className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                        />
+                        {project.linkLabel ?? "Code"} <FiArrowUpRight aria-hidden />
+                        <span className="sr-only">(opens in a new tab)</span>
                     </a>
-                </Reveal>
+                ) : (
+                    <span className="inline-flex items-center gap-1.5 text-[13px] text-ink-3">
+                        <FiLock aria-hidden size={12} /> demo on request
+                    </span>
+                )}
             </div>
-        </section>
+            </div>
+        </article>
     );
 };
+
+const Projects = () => (
+    <section id="systems" aria-labelledby="systems-title" className="mx-auto max-w-content px-5 py-10 sm:px-8">
+        <SectionHeader
+            id="systems-title"
+            title="Systems I built and run"
+            aside={
+                <span className="inline-flex items-center gap-2">
+                    <span className="inline-block h-2.5 w-2.5 rounded-sm border border-signal bg-signal-soft" aria-hidden />
+                    AI model step
+                </span>
+            }
+        />
+        <div className="grid gap-4 md:grid-cols-2">
+            {projects.map((p, i) => (
+                <Reveal key={p.name} delay={(i % 2) * 60} className="flex">
+                    <SystemCard project={p} />
+                </Reveal>
+            ))}
+        </div>
+    </section>
+);
 
 export default Projects;

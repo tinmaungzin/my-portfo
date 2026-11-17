@@ -35,11 +35,11 @@ const applyTheme = (theme: Theme) => {
 };
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-    const [theme, setTheme] = useState<Theme>("dark");
+    const [theme, setTheme] = useState<Theme>("light");
 
     // The boot script in _document.tsx already set data-theme before paint
     useEffect(() => {
-        setTheme(document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark");
+        setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
     }, []);
 
     const toggleTheme = useCallback(

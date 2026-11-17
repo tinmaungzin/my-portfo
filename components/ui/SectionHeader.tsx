@@ -1,21 +1,20 @@
-import Reveal from "./Reveal";
+import { ReactNode } from "react";
 
 interface SectionHeaderProps {
-    comment: string;
+    /** id of the heading, for aria-labelledby on the section */
+    id: string;
     title: string;
-    subtitle?: string;
+    /** Small text on the right, e.g. a count */
+    aside?: ReactNode;
 }
 
-const SectionHeader = ({ comment, title, subtitle }: SectionHeaderProps) => (
-    <Reveal className="mb-12 md:mb-16 max-w-2xl">
-        <p className="section-comment mb-3">{`// ${comment}`}</p>
-        <h2 className="text-3xl md:text-[2.5rem] font-bold tracking-tight text-text-primary text-balance leading-tight">
+const SectionHeader = ({ id, title, aside }: SectionHeaderProps) => (
+    <div className="mb-4 flex items-baseline justify-between gap-4">
+        <h2 id={id} className="label">
             {title}
         </h2>
-        {subtitle && (
-            <p className="text-text-secondary mt-4 text-base md:text-lg leading-relaxed text-pretty">{subtitle}</p>
-        )}
-    </Reveal>
+        {aside && <p className="text-[13px] text-ink-3">{aside}</p>}
+    </div>
 );
 
 export default SectionHeader;
