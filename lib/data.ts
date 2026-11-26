@@ -229,7 +229,7 @@ export const experiences: Experience[] = [
     {
         company: "Myanmar Institute for Peace and Security (MIPS)",
         logo: "/images/MIPS.png",
-        location: "Yangon, Myanmar (Remote)",
+        location: "Remote",
         role: "Research Assistant",
         duration: "May 2022 – Mar 2024",
         startYear: 2022,
